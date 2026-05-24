@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>A·I·R Distillations — Founders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --ink: #efeae3;
+    --ink-dim: rgba(239, 234, 227, 0.55);
+    --hair: rgba(239, 234, 227, 0.22);
+    --dot: #efeae3;
+    --max-w: 480px;
+    --pad: 28px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  body {
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: var(--max-w);
+    padding: 44px var(--pad) 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  /* ───── HEADER / WORDMARK ───── */
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+    user-select: none;
+  }
+  .wordmark img {
+    display: block;
+    width: 72%;
+    max-width: 280px;
+    height: auto;
+    -webkit-user-drag: none;
+  }
+
+  /* ───── HERO PHOTO ───── */
+  .hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1336 / 2000;
+    overflow: hidden;
+    background: #111;
+    --img-x: 0px;
+    --img-y: 0px;
+    --dot-x: 0px;
+    --dot-y: 0px;
+  }
+  .hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.02) brightness(0.98);
+    /* scale up so parallax translate never reveals edges */
+    transform: translate3d(var(--img-x), var(--img-y), 0) scale(1.06);
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  /* ───── DOT MARKERS ───── */
+  .dot-marker {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    /* baseline centering + per-instance parallax offset (set via inline style) */
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)));
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    will-change: transform;
+  }
+  .dot-marker::before,
+  .dot-marker::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+  }
+  /* solid white core */
+  .dot-marker::before {
+    background: var(--dot);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.15),
+      0 2px 10px rgba(0,0,0,0.35);
+    transition: transform 0.4s cubic-bezier(.2,.7,.2,1.2);
+  }
+  /* expanding pulse ring */
+  .dot-marker::after {
+    background: var(--dot);
+    opacity: 0.55;
+    animation: pulse 2.4s ease-out infinite;
+  }
+  .dot-marker:nth-of-type(2)::after { animation-delay: 0.6s; }
+  .dot-marker:nth-of-type(3)::after { animation-delay: 1.2s; }
+
+  .dot-marker:hover::before { transform: scale(1.15); }
+  .dot-marker[aria-expanded="true"]::before {
+    transform: scale(1.35);
+    background: var(--ink);
+  }
+  .dot-marker[aria-expanded="true"]::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: 0.55; }
+    70%  { transform: scale(3.2); opacity: 0;    }
+    100% { transform: scale(3.2); opacity: 0;    }
+  }
+
+  /* Approximate dot positions over team-small.jpg (1336x2000) */
+  .dot-marker.d1 { left: 21.5%; top: 35.5%; }   /* Alexander */
+  .dot-marker.d2 { left: 47.5%; top: 41%;  }   /* Ina */
+  .dot-marker.d3 { left: 71%;   top: 47%;  }   /* Ruben */
+
+  /* ───── FOUNDER LIST / ACCORDION ───── */
+  .founders {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--hair);
+  }
+  .founder {
+    border-bottom: 1px solid var(--hair);
+  }
+  .founder__head {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    padding: 22px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--ink);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    text-align: left;
+  }
+  .founder__head .name {
+    flex: 1;
+    min-width: 0;
+    transition: transform 0.5s cubic-bezier(.2,.7,.2,1);
+  }
+  .founder__head .toggle {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+  .founder__head .toggle::before,
+  .founder__head .toggle::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+    transition: transform 0.5s cubic-bezier(.2,.7,.2,1), opacity 0.4s ease;
+  }
+  .founder__head .toggle::before { /* horizontal */
+    left: 0; right: 0; top: 50%;
+    height: 1px; transform: translateY(-50%);
+  }
+  .founder__head .toggle::after  { /* vertical */
+    top: 0; bottom: 0; left: 50%;
+    width: 1px; transform: translateX(-50%);
+  }
+  .founder[aria-expanded="true"] .toggle::after  { transform: translateX(-50%) rotate(90deg); opacity: 0; }
+  .founder[aria-expanded="true"] .toggle::before { transform: translateY(-50%) rotate(180deg); }
+  .founder[aria-expanded="true"] .name        { transform: translateX(6px); }
+
+  /* collapsible panel */
+  .founder__body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s cubic-bezier(.2,.7,.2,1);
+  }
+  .founder__body > .inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+  .founder[aria-expanded="true"] .founder__body { grid-template-rows: 1fr; }
+
+  .founder__body .inner-pad {
+    padding: 0 2px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.45s ease 0.12s, transform 0.5s cubic-bezier(.2,.7,.2,1) 0.1s;
+  }
+  .founder[aria-expanded="true"] .founder__body .inner-pad {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .founder__role {
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 2px;
+  }
+
+  .contact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    padding: 4px 0;
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .contact .label {
+    width: 56px;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    flex: none;
+  }
+  .contact .val {
+    position: relative;
+  }
+  .contact .val::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -3px;
+    height: 1px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(.2,.7,.2,1);
+  }
+  .contact:hover .val::after,
+  .contact:focus-visible .val::after { transform: scaleX(1); }
+
+  .socials {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .socials a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--hair);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(.2,.7,.2,1.4);
+  }
+  .socials a:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+    transform: translateY(-2px);
+  }
+  .socials a svg { width: 18px; height: 18px; display: block; }
+
+  /* ───── OTHER BRAND FOOTER ───── */
+  .other {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 60px 0 12px;
+  }
+  .other .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .alter-logo {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .alter-logo img {
+    display: block;
+    width: 180px;
+    max-width: 60%;
+    height: auto;
+    -webkit-user-drag: none;
+  }
+
+  /* fade-in on load */
+  .stage > * { opacity: 0; animation: rise 0.9s cubic-bezier(.2,.7,.2,1) forwards; }
+  .stage > *:nth-child(1) { animation-delay: 0.05s; }
+  .stage > *:nth-child(2) { animation-delay: 0.20s; }
+  .stage > *:nth-child(3) { animation-delay: 0.40s; }
+  .stage > *:nth-child(4) { animation-delay: 0.55s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="stage">
+
+    <!-- WORDMARK -->
+    <header class="wordmark" aria-label="A·I·R Distillations Antwerp">
+      <img src="assets/air-logo.png" alt="A·I·R Distillations Antwerp" />
+    </header>
+
+    <!-- HERO PHOTO -->
+    <section class="hero" aria-label="The founders at the distillery">
+      <img src="assets/team.jpg" alt="Alexander, Ina and Ruben in the AIR distillery" />
+
+      <button class="dot-marker d1" data-target="f-alex" aria-expanded="false" aria-controls="f-alex" aria-label="Open Alexander Scott Wingfield Jones"></button>
+      <button class="dot-marker d2" data-target="f-ina"  aria-expanded="false" aria-controls="f-ina"  aria-label="Open Ina Simone Averhals"></button>
+      <button class="dot-marker d3" data-target="f-ruben" aria-expanded="false" aria-controls="f-ruben" aria-label="Open Ruben Van Aken"></button>
+    </section>
+
+    <!-- FOUNDER ACCORDION -->
+    <section class="founders" aria-label="Founders">
+
+      <article class="founder" id="f-alex" aria-expanded="false">
+        <button class="founder__head" data-toggle="f-alex" aria-controls="f-alex" aria-expanded="false">
+          <span class="name">Alexander Scott Wingfield Jones</span>
+          <span class="toggle" aria-hidden="true"></span>
+        </button>
+        <div class="founder__body"><div class="inner"><div class="inner-pad">
+          <div class="founder__role">Co-Founder · Distiller</div>
+          <a class="contact" href="mailto:alexander@airdistillations.com">
+            <span class="label">Mail</span>
+            <span class="val">alexander@airdistillations.com</span>
+          </a>
+          <a class="contact" href="tel:+32000000000">
+            <span class="label">Tel</span>
+            <span class="val">+32 000 00 00 00</span>
+          </a>
+          <div class="socials" aria-label="Social links">
+            <a href="https://wa.me/32000000000" aria-label="WhatsApp Alexander" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
+            </a>
+            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          </div>
+        </div></div></div>
+      </article>
+
+      <article class="founder" id="f-ina" aria-expanded="false">
+        <button class="founder__head" data-toggle="f-ina" aria-controls="f-ina" aria-expanded="false">
+          <span class="name">Ina Simone Averhals</span>
+          <span class="toggle" aria-hidden="true"></span>
+        </button>
+        <div class="founder__body"><div class="inner"><div class="inner-pad">
+          <div class="founder__role">Co-Founder</div>
+          <a class="contact" href="mailto:ina@airdistillations.com">
+            <span class="label">Mail</span>
+            <span class="val">ina@airdistillations.com</span>
+          </a>
+          <a class="contact" href="tel:+32000000000">
+            <span class="label">Tel</span>
+            <span class="val">+32 000 00 00 00</span>
+          </a>
+          <div class="socials" aria-label="Social links">
+            <a href="https://wa.me/32000000000" aria-label="WhatsApp Ina" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
+            </a>
+            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          </div>
+        </div></div></div>
+      </article>
+
+      <article class="founder" id="f-ruben" aria-expanded="false">
+        <button class="founder__head" data-toggle="f-ruben" aria-controls="f-ruben" aria-expanded="false">
+          <span class="name">Ruben Van Aken</span>
+          <span class="toggle" aria-hidden="true"></span>
+        </button>
+        <div class="founder__body"><div class="inner"><div class="inner-pad">
+          <div class="founder__role">Co-Founder</div>
+          <a class="contact" href="mailto:ruben@airdistillations.com">
+            <span class="label">Mail</span>
+            <span class="val">ruben@airdistillations.com</span>
+          </a>
+          <a class="contact" href="tel:+32000000000">
+            <span class="label">Tel</span>
+            <span class="val">+32 000 00 00 00</span>
+          </a>
+          <div class="socials" aria-label="Social links">
+            <a href="https://wa.me/32000000000" aria-label="WhatsApp Ruben" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
+            </a>
+            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          </div>
+        </div></div></div>
+      </article>
+
+    </section>
+
+    <!-- OTHER BRAND -->
+    <footer class="other">
+      <div class="eyebrow">Other brand</div>
+      <a class="alter-logo" href="#" aria-label="Alter Cuvée">
+        <img src="assets/alter-logo.png" alt="Alter Cuvée" />
+      </a>
+    </footer>
+
+  </main>
+
+<script>
+  /* ── Subtle parallax: image lags scroll, dots move opposite for depth ── */
+  (function () {
+    const hero = document.querySelector('.hero');
+    const img = hero.querySelector('img');
+    const pdots = hero.querySelectorAll('.dot-marker');
+    if (!hero || !img) return;
+
+    let tIY = 0, tIX = 0;
+    let cIY = 0, cIX = 0;
+    let rafId = null;
+
+    // per-dot factors — each slightly different so there's parallax BETWEEN dots,
+    // but all close to 1.0 so each dot stays anchored to its person.
+    const DOT_FACTORS = [0.86, 1.00, 1.16];
+
+    function onScroll() {
+      const r = hero.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // -1 .. +1 as hero passes through the viewport
+      const p = Math.max(-1, Math.min(1,
+        (r.top + r.height / 2 - vh / 2) / ((vh + r.height) / 2)
+      ));
+      tIY = p * 18;     // image drifts gently with scroll
+      kick();
+    }
+
+    function onPointer(e) {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      tIX = -x * 5;
+      kick();
+    }
+    function onPointerLeave() { tIX = 0; kick(); }
+
+    function tick() {
+      cIY += (tIY - cIY) * 0.08;
+      cIX += (tIX - cIX) * 0.08;
+
+      hero.style.setProperty('--img-x', cIX.toFixed(2) + 'px');
+      hero.style.setProperty('--img-y', cIY.toFixed(2) + 'px');
+
+      // Dots follow the image (so each stays on its person), but each at a
+      // slightly different rate -> subtle parallax BETWEEN the three dots.
+      pdots.forEach((d, i) => {
+        const f = DOT_FACTORS[i] != null ? DOT_FACTORS[i] : 1;
+        d.style.setProperty('--dx', (cIX * f).toFixed(2) + 'px');
+        d.style.setProperty('--dy', (cIY * f).toFixed(2) + 'px');
+      });
+
+      // keep animating until values settle
+      const done =
+        Math.abs(tIY - cIY) < 0.05 &&
+        Math.abs(tIX - cIX) < 0.05;
+      if (done) { rafId = null; } else { rafId = requestAnimationFrame(tick); }
+    }
+    function kick() { if (rafId == null) rafId = requestAnimationFrame(tick); }
+
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      if (matchMedia('(hover: hover)').matches) {
+        hero.addEventListener('pointermove', onPointer);
+        hero.addEventListener('pointerleave', onPointerLeave);
+      }
+      onScroll();
+    }
+  })();
+
+  (function () {
+    const founders = document.querySelectorAll('.founder');
+    const dots = document.querySelectorAll('.dot-marker');
+
+    function setOpen(id, open) {
+      founders.forEach(f => {
+        const isTarget = f.id === id;
+        const willOpen = isTarget && open;
+        f.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        const head = f.querySelector('.founder__head');
+        if (head) head.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+      dots.forEach(d => {
+        d.setAttribute('aria-expanded', d.dataset.target === id && open ? 'true' : 'false');
+      });
+    }
+
+    function toggle(id) {
+      const target = document.getElementById(id);
+      if (!target) return;
+      const isOpen = target.getAttribute('aria-expanded') === 'true';
+      setOpen(id, !isOpen);
+      if (!isOpen) {
+        // smooth-scroll the opening row into view (mobile niceness)
+        setTimeout(() => {
+          const top = target.getBoundingClientRect().top + window.scrollY - 24;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }, 80);
+      }
+    }
+
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => toggle(btn.dataset.toggle));
+    });
+    dots.forEach(d => {
+      d.addEventListener('click', () => toggle(d.dataset.target));
+    });
+  })();
+</script>
+</body>
+</html>
