@@ -60,6 +60,31 @@
     -webkit-user-drag: none;
   }
 
+  /* ───── BRAND LINKS (under wordmark) ───── */
+  .brand-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .brand-links a {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--hair);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(.2,.7,.2,1.4);
+  }
+  .brand-links a:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+    transform: translateY(-2px);
+  }
+  .brand-links a svg { width: 18px; height: 18px; display: block; }
+
   /* ───── HERO PHOTO ───── */
   .hero {
     position: relative;
@@ -327,9 +352,10 @@
   /* fade-in on load */
   .stage > * { opacity: 0; animation: rise 0.9s cubic-bezier(.2,.7,.2,1) forwards; }
   .stage > *:nth-child(1) { animation-delay: 0.05s; }
-  .stage > *:nth-child(2) { animation-delay: 0.20s; }
-  .stage > *:nth-child(3) { animation-delay: 0.40s; }
-  .stage > *:nth-child(4) { animation-delay: 0.55s; }
+  .stage > *:nth-child(2) { animation-delay: 0.15s; }
+  .stage > *:nth-child(3) { animation-delay: 0.30s; }
+  .stage > *:nth-child(4) { animation-delay: 0.45s; }
+  .stage > *:nth-child(5) { animation-delay: 0.60s; }
   @keyframes rise {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -351,6 +377,31 @@
       <img src="assets/air-logo.png" alt="A·I·R Distillations Antwerp" />
     </header>
 
+    <!-- BRAND LINKS -->
+    <nav class="brand-links" aria-label="A·I·R Distillations links">
+      <a href="https://www.airdistillations.com" aria-label="Website" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M3 12h18"/>
+          <path d="M12 3a14 14 0 0 1 0 18"/>
+          <path d="M12 3a14 14 0 0 0 0 18"/>
+        </svg>
+      </a>
+      <a href="https://instagram.com/a.i.r.distillations" aria-label="Instagram A·I·R Distillations" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="mailto:hq@airdistillations.com" aria-label="Email A·I·R Distillations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m3 7 9 6 9-6"/>
+        </svg>
+      </a>
+    </nav>
+
     <!-- HERO PHOTO -->
     <section class="hero" aria-label="The founders at the distillery">
       <img src="assets/team.jpg" alt="Alexander, Ina and Ruben in the AIR distillery" />
@@ -370,19 +421,19 @@
         </button>
         <div class="founder__body"><div class="inner"><div class="inner-pad">
           <div class="founder__role">Co-Founder · Distiller</div>
-          <a class="contact" href="mailto:alexander@airdistillations.com">
+          <a class="contact" href="mailto:hq@airdistillations.com">
             <span class="label">Mail</span>
-            <span class="val">alexander@airdistillations.com</span>
+            <span class="val">hq@airdistillations.com</span>
           </a>
-          <a class="contact" href="tel:+32000000000">
+          <a class="contact" href="tel:+32493073771">
             <span class="label">Tel</span>
-            <span class="val">+32 000 00 00 00</span>
+            <span class="val">+32 493 07 37 71</span>
           </a>
           <div class="socials" aria-label="Social links">
-            <a href="https://wa.me/32000000000" aria-label="WhatsApp Alexander" target="_blank" rel="noopener">
+            <a href="https://wa.me/32493073771" aria-label="WhatsApp Alexander" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
             </a>
-            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+            <a href="https://instagram.com/alexander_scottjones" aria-label="Instagram Alexander" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="5"/>
                 <circle cx="12" cy="12" r="4"/>
@@ -400,19 +451,19 @@
         </button>
         <div class="founder__body"><div class="inner"><div class="inner-pad">
           <div class="founder__role">Co-Founder</div>
-          <a class="contact" href="mailto:ina@airdistillations.com">
+          <a class="contact" href="mailto:hi@airdistillations.com">
             <span class="label">Mail</span>
-            <span class="val">ina@airdistillations.com</span>
+            <span class="val">hi@airdistillations.com</span>
           </a>
-          <a class="contact" href="tel:+32000000000">
+          <a class="contact" href="tel:+32477666591">
             <span class="label">Tel</span>
-            <span class="val">+32 000 00 00 00</span>
+            <span class="val">+32 477 66 65 91</span>
           </a>
           <div class="socials" aria-label="Social links">
-            <a href="https://wa.me/32000000000" aria-label="WhatsApp Ina" target="_blank" rel="noopener">
+            <a href="https://wa.me/32477666591" aria-label="WhatsApp Ina" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
             </a>
-            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+            <a href="https://instagram.com/ina.si.mone" aria-label="Instagram Ina" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="5"/>
                 <circle cx="12" cy="12" r="4"/>
@@ -430,19 +481,19 @@
         </button>
         <div class="founder__body"><div class="inner"><div class="inner-pad">
           <div class="founder__role">Co-Founder</div>
-          <a class="contact" href="mailto:ruben@airdistillations.com">
+          <a class="contact" href="mailto:hq@airdistillations.com">
             <span class="label">Mail</span>
-            <span class="val">ruben@airdistillations.com</span>
+            <span class="val">hq@airdistillations.com</span>
           </a>
-          <a class="contact" href="tel:+32000000000">
+          <a class="contact" href="tel:+32477178913">
             <span class="label">Tel</span>
-            <span class="val">+32 000 00 00 00</span>
+            <span class="val">+32 477 17 89 13</span>
           </a>
           <div class="socials" aria-label="Social links">
-            <a href="https://wa.me/32000000000" aria-label="WhatsApp Ruben" target="_blank" rel="noopener">
+            <a href="https://wa.me/32477178913" aria-label="WhatsApp Ruben" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.4 16.2L2 22l6-1.5a10.4 10.4 0 0 0 15.1-9.2c0-2.8-1.1-5.4-2.6-7.8Zm-8.6 16.1c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.5.9.9-3.4-.2-.3a8.6 8.6 0 1 1 15.9-4.6 8.6 8.6 0 0 1-8.3 8.8Zm4.7-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.6-1.5-.9-2-.2-.5-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.6 1.8-1.3.2-.7.2-1.2.1-1.3-.1-.1-.2-.1-.5-.3Z"/></svg>
             </a>
-            <a href="https://instagram.com/airdistillations" aria-label="Instagram" target="_blank" rel="noopener">
+            <a href="https://instagram.com/ruben.jaak" aria-label="Instagram Ruben" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="5"/>
                 <circle cx="12" cy="12" r="4"/>
