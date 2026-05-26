@@ -99,10 +99,7 @@
     aspect-ratio: 1336 / 2000;
     overflow: hidden;
     background: #111;
-    --img-x: 0px;
-    --img-y: 0px;
-    --dot-x: 0px;
-    --dot-y: 0px;
+    border-radius: 14px;
   }
   .hero img {
     display: block;
@@ -110,10 +107,6 @@
     height: 100%;
     object-fit: cover;
     filter: contrast(1.02) brightness(0.98);
-    /* scale up so parallax translate never reveals edges */
-    transform: translate3d(var(--img-x), var(--img-y), 0) scale(1.06);
-    transform-origin: center;
-    will-change: transform;
   }
 
   /* ───── DOT MARKERS ───── */
@@ -125,11 +118,34 @@
     padding: 0;
     background: transparent;
     cursor: pointer;
-    /* baseline centering + per-instance parallax offset (set via inline style) */
-    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)));
+    transform: translate(-50%, -50%);
     -webkit-tap-highlight-color: transparent;
     outline: none;
-    will-change: transform;
+  }
+  /* hover name label under each dot */
+  .dot-label {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translate(-50%, -6px);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: rgba(10, 10, 10, 0.72);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    padding: 5px 9px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.2,.7,.2,1);
+  }
+  .dot-marker:hover .dot-label,
+  .dot-marker:focus-visible .dot-label {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
   .dot-marker::before,
   .dot-marker::after {
@@ -419,9 +435,9 @@
     <section class="hero" aria-label="The founders at the distillery">
       <img src="assets/team.jpg" alt="Alexander, Ina and Ruben in the AIR distillery" />
 
-      <button class="dot-marker d1" data-target="f-alex" aria-expanded="false" aria-controls="f-alex" aria-label="Open Alexander Scott Wingfield Jones"></button>
-      <button class="dot-marker d2" data-target="f-ina"  aria-expanded="false" aria-controls="f-ina"  aria-label="Open Ina Simone Averhals"></button>
-      <button class="dot-marker d3" data-target="f-ruben" aria-expanded="false" aria-controls="f-ruben" aria-label="Open Ruben Van Aken"></button>
+      <button class="dot-marker d1" data-target="f-alex" aria-expanded="false" aria-controls="f-alex" aria-label="Open Alexander Scott Wingfield Jones"><span class="dot-label" aria-hidden="true">Alexander</span></button>
+      <button class="dot-marker d2" data-target="f-ina"  aria-expanded="false" aria-controls="f-ina"  aria-label="Open Ina Simone Averhals"><span class="dot-label" aria-hidden="true">Ina</span></button>
+      <button class="dot-marker d3" data-target="f-ruben" aria-expanded="false" aria-controls="f-ruben" aria-label="Open Ruben Van Aken"><span class="dot-label" aria-hidden="true">Ruben</span></button>
     </section>
 
     <!-- FOUNDER ACCORDION -->
@@ -530,74 +546,6 @@
   </main>
 
 <script>
-  /* ── Subtle parallax: image lags scroll, dots move opposite for depth ── */
-  (function () {
-    const hero = document.querySelector('.hero');
-    const img = hero.querySelector('img');
-    const pdots = hero.querySelectorAll('.dot-marker');
-    if (!hero || !img) return;
-
-    let tIY = 0, tIX = 0;
-    let cIY = 0, cIX = 0;
-    let rafId = null;
-
-    // per-dot factors — each slightly different so there's parallax BETWEEN dots,
-    // but all close to 1.0 so each dot stays anchored to its person.
-    const DOT_FACTORS = [0.86, 1.00, 1.16];
-
-    function onScroll() {
-      const r = hero.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      // -1 .. +1 as hero passes through the viewport
-      const p = Math.max(-1, Math.min(1,
-        (r.top + r.height / 2 - vh / 2) / ((vh + r.height) / 2)
-      ));
-      tIY = p * 18;     // image drifts gently with scroll
-      kick();
-    }
-
-    function onPointer(e) {
-      const r = hero.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      tIX = -x * 5;
-      kick();
-    }
-    function onPointerLeave() { tIX = 0; kick(); }
-
-    function tick() {
-      cIY += (tIY - cIY) * 0.08;
-      cIX += (tIX - cIX) * 0.08;
-
-      hero.style.setProperty('--img-x', cIX.toFixed(2) + 'px');
-      hero.style.setProperty('--img-y', cIY.toFixed(2) + 'px');
-
-      // Dots follow the image (so each stays on its person), but each at a
-      // slightly different rate -> subtle parallax BETWEEN the three dots.
-      pdots.forEach((d, i) => {
-        const f = DOT_FACTORS[i] != null ? DOT_FACTORS[i] : 1;
-        d.style.setProperty('--dx', (cIX * f).toFixed(2) + 'px');
-        d.style.setProperty('--dy', (cIY * f).toFixed(2) + 'px');
-      });
-
-      // keep animating until values settle
-      const done =
-        Math.abs(tIY - cIY) < 0.05 &&
-        Math.abs(tIX - cIX) < 0.05;
-      if (done) { rafId = null; } else { rafId = requestAnimationFrame(tick); }
-    }
-    function kick() { if (rafId == null) rafId = requestAnimationFrame(tick); }
-
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      if (matchMedia('(hover: hover)').matches) {
-        hero.addEventListener('pointermove', onPointer);
-        hero.addEventListener('pointerleave', onPointerLeave);
-      }
-      onScroll();
-    }
-  })();
-
   (function () {
     const founders = document.querySelectorAll('.founder');
     const dots = document.querySelectorAll('.dot-marker');
