@@ -52,8 +52,15 @@
     padding-top: 4px;
     user-select: none;
   }
-  .wordmark img {
+  .wordmark a {
     display: block;
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.35s ease;
+  }
+  .wordmark a:hover { opacity: 0.78; }
+  .wordmark img {
+    display: inline-block;
     width: 72%;
     max-width: 280px;
     height: auto;
@@ -340,7 +347,9 @@
     display: block;
     text-decoration: none;
     color: var(--ink);
+    transition: opacity 0.35s ease;
   }
+  .alter-logo:hover { opacity: 0.78; }
   .alter-logo img {
     display: block;
     width: 180px;
@@ -374,7 +383,9 @@
 
     <!-- WORDMARK -->
     <header class="wordmark" aria-label="A·I·R Distillations Antwerp">
-      <img src="assets/air-logo.png" alt="A·I·R Distillations Antwerp" />
+      <a href="https://www.airdistillations.com/" target="_blank" rel="noopener" aria-label="A·I·R Distillations website">
+        <img src="assets/air-logo.png" alt="A·I·R Distillations Antwerp" />
+      </a>
     </header>
 
     <!-- BRAND LINKS -->
@@ -509,7 +520,7 @@
     <!-- OTHER BRAND -->
     <footer class="other">
       <div class="eyebrow">Other brand</div>
-      <a class="alter-logo" href="#" aria-label="Alter Cuvée">
+      <a class="alter-logo" href="https://alter-cuvee.com/" target="_blank" rel="noopener" aria-label="Alter Cuvée website">
         <img src="assets/alter-logo.png" alt="Alter Cuvée" />
       </a>
     </footer>
