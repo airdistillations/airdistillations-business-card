@@ -187,10 +187,43 @@
     100% { transform: scale(3.2); opacity: 0;    }
   }
 
+  /* Slow per-dot wiggle. The -50%/-50% centering stays inside each
+     calc() so the dots remain anchored to their face. Different paths,
+     off-prime durations (11/13/17s) and negative delays mean the three
+     never re-sync — visual non-repetition for ~40 minutes. */
+  @keyframes wiggle1 {
+    0%   { transform: translate(-50%, -50%); }
+    25%  { transform: translate(calc(-50% + 2.4px), calc(-50% - 2.8px)); }
+    50%  { transform: translate(calc(-50% + 2.8px), calc(-50% + 1.6px)); }
+    75%  { transform: translate(calc(-50% - 2.2px), calc(-50% + 2.4px)); }
+    100% { transform: translate(-50%, -50%); }
+  }
+  @keyframes wiggle2 {
+    0%   { transform: translate(-50%, -50%); }
+    22%  { transform: translate(calc(-50% - 2.6px), calc(-50% + 2.0px)); }
+    48%  { transform: translate(calc(-50% + 1.2px), calc(-50% + 2.8px)); }
+    74%  { transform: translate(calc(-50% + 2.8px), calc(-50% - 1.8px)); }
+    100% { transform: translate(-50%, -50%); }
+  }
+  @keyframes wiggle3 {
+    0%   { transform: translate(-50%, -50%); }
+    28%  { transform: translate(calc(-50% + 2.2px), calc(-50% + 2.4px)); }
+    54%  { transform: translate(calc(-50% - 2.6px), calc(-50% + 1.2px)); }
+    78%  { transform: translate(calc(-50% - 1.6px), calc(-50% - 2.6px)); }
+    100% { transform: translate(-50%, -50%); }
+  }
+
   /* Approximate dot positions over team-small.jpg (1336x2000) */
-  .dot-marker.d1 { left: 21.5%; top: 35.5%; }   /* Alexander */
-  .dot-marker.d2 { left: 47.5%; top: 41%;  }   /* Ina */
-  .dot-marker.d3 { left: 71%;   top: 47%;  }   /* Ruben */
+  .dot-marker.d1 { left: 21.5%; top: 35.5%; animation: wiggle1 11s ease-in-out -2s infinite; } /* Alexander */
+  .dot-marker.d2 { left: 47.5%; top: 41%;  animation: wiggle2 13s ease-in-out -5s infinite; } /* Ina */
+  .dot-marker.d3 { left: 71%;   top: 47%;  animation: wiggle3 17s ease-in-out -8s infinite; } /* Ruben */
+
+  /* hold position while interacting or when the row is open */
+  .dot-marker:hover,
+  .dot-marker:focus-visible,
+  .dot-marker[aria-expanded="true"] {
+    animation-play-state: paused;
+  }
 
   /* ───── FOUNDER LIST / ACCORDION ───── */
   .founders {
